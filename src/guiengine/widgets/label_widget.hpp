@@ -36,6 +36,7 @@ namespace GUIEngine
     {
         bool               m_bright;
         bool               m_has_color;
+        bool               m_outline;
         irr::video::SColor m_color;
 
         /** Scroll speed in characters/seconds (0 if no scrolling). */
@@ -53,7 +54,7 @@ namespace GUIEngine
           * \param bright True if a bright color should be used
           * \note \c title and \c bright are mutually exclusive
           */
-        LabelWidget(bool title=false, bool bright=false);
+        LabelWidget(bool title=false, bool bright=false, bool outline=false);
         
         virtual ~LabelWidget() {}
         

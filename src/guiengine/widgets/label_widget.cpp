@@ -36,9 +36,10 @@ using namespace irr;
 
 // ----------------------------------------------------------------------------
 
-LabelWidget::LabelWidget(bool title, bool bright) : Widget(WTYPE_LABEL)
+LabelWidget::LabelWidget(bool title, bool bright, bool outline) : Widget(WTYPE_LABEL)
 {
-    m_title_font   = title;
+    m_title_font = title;
+    m_outline = outline;
     m_scroll_speed = 0;
     m_scroll_offset = 0;
     m_bright = bright;
@@ -101,6 +102,10 @@ void LabelWidget::add()
         irrwidget->setOverrideColor( video::SColor(255,255,255,255) );
         irrwidget->setOverrideFont( GUIEngine::getTitleFont() );
     }
+    else if (m_outline)
+    {
+        irrwidget->setOverrideFont(GUIEngine::getOutlineFont());
+    }
     //irrwidget->setBackgroundColor( video::SColor(255,255,0,0) );
     //irrwidget->setDrawBackground(true);
 
@@ -111,8 +116,14 @@ void LabelWidget::add()
 
     if (m_scroll_speed > 0)
     {
-        IGUIFont* font = m_title_font ? GUIEngine::getTitleFont()
-                                      : GUIEngine::getFont();
+        // getOutlineFont
+        IGUIFont* font;
+        if (m_title_font)
+            font = GUIEngine::getTitleFont();
+        else if (m_outline)
+            font = GUIEngine::getOutlineFont();
+        else
+            font = GUIEngine::getFont();
         core::dimension2du r = font->getDimension(getText().c_str());
 
         //m_scroll_offset = (float)r.Width;
@@ -135,7 +146,14 @@ void LabelWidget::setText(const wchar_t *text, bool expandIfNeeded)
     if (expandIfNeeded)
     {
         assert(m_element != NULL);
-        const int fwidth = (m_title_font ? GUIEngine::getTitleFont() : GUIEngine::getFont())->getDimension(text).Width;
+        IGUIFont* font;
+        if (m_title_font)
+            font = GUIEngine::getTitleFont();
+        else if (m_outline)
+            font = GUIEngine::getOutlineFont();
+        else
+            font = GUIEngine::getFont();
+        const int fwidth = font->getDimension(text).Width;
         core::rect<s32> rect = m_element->getRelativePosition();
 
         if (rect.getWidth() < fwidth)

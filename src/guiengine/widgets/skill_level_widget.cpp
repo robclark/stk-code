@@ -62,7 +62,8 @@ SkillLevelWidget::SkillLevelWidget(core::recti area, const int player_id,
 
     m_label = NULL;
 
-    m_label = new LabelWidget(!multiplayer, true);
+    m_label = new LabelWidget(false, true, true);
+    m_label->m_properties[PROP_TEXT_ALIGN] = "right";
     m_label->setText(label,false);
 
     m_label->m_x = m_label_x;
@@ -123,7 +124,9 @@ void SkillLevelWidget::setSize(const int x, const int y, const int w, const int 
     else
         m_bar_w = w * 2 / 3;
     m_bar_h = h;
-    m_label_w = w/2;
+
+    // half of the available width, leaving some space to the right
+    m_label_w = (int)(w * 0.45f);
     m_label_h = h;
 
     // for shrinking effect
