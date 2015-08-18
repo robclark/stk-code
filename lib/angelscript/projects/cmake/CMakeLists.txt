@@ -98,14 +98,12 @@ if(MSVC AND CMAKE_CL_64)
     endif()
 endif()
 
-if(ANDROID)
     enable_language(ASM)
     if(CMAKE_ASM_COMPILER_WORKS)
         set(ANGELSCRIPT_SOURCE ${ANGELSCRIPT_SOURCE} ../../source/as_callfunc_arm.cpp ../../source/as_callfunc_arm_gcc.S)
     else()
         message(FATAL ERROR "Android target requires a working assembler")
     endif()
-endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../../include)
 
