@@ -518,8 +518,6 @@ void IrrDriver::renderScene(scene::ICameraSceneNode * const camnode, unsigned po
         PROFILER_POP_CPU_MARKER();
     }
 
-    m_sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-
     // Render particles
     {
         PROFILER_PUSH_CPU_MARKER("- Particles", 0xFF, 0xFF, 0x00);

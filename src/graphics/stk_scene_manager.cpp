@@ -611,18 +611,20 @@ PROFILER_PUSH_CPU_MARKER("- culling", 0xFF, 0xFF, 0x0);
 PROFILER_POP_CPU_MARKER();
 
     // Add a 1 s timeout
-    if (!m_sync)
-        m_sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-    PROFILER_PUSH_CPU_MARKER("- Sync Stall", 0xFF, 0x0, 0x0);
-    GLenum reason = glClientWaitSync(m_sync, GL_SYNC_FLUSH_COMMANDS_BIT, 0);
-
-    while (reason != GL_ALREADY_SIGNALED)
+    if (m_sync)
     {
-        if (reason == GL_WAIT_FAILED) break;
-        reason = glClientWaitSync(m_sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1000000);
+        PROFILER_PUSH_CPU_MARKER("- Sync Stall", 0xFF, 0x0, 0x0);
+        GLenum reason = glClientWaitSync(m_sync, GL_SYNC_FLUSH_COMMANDS_BIT, 0);
+
+        while (reason != GL_ALREADY_SIGNALED)
+        {
+            if (reason == GL_WAIT_FAILED) break;
+            reason = glClientWaitSync(m_sync, GL_SYNC_FLUSH_COMMANDS_BIT, 1000000);
+        }
+        glDeleteSync(m_sync);
+        m_sync = 0;
+        PROFILER_POP_CPU_MARKER();
     }
-    glDeleteSync(m_sync);
-    PROFILER_POP_CPU_MARKER();
     /*    switch (reason)
     {
     case GL_ALREADY_SIGNALED:
